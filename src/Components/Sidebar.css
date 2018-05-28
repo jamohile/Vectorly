@@ -74,6 +74,11 @@
 }
 #sidebar .item .controls input{
     width: 50%;
+    position: relative;
+    left: 6px;
+}
+#sidebar .item .controls input.focus{
+    color:var(--primary);
 }
 
 #sidebar .item .controls span{

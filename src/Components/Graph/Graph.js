@@ -29,6 +29,7 @@ class Graph extends Component {
 
     componentDidMount() {
         const controls = new OrbitControls(this.camera, document.querySelector('canvas'))
+        controls.addEventListener('change', this.cameraChanged);
         window.addEventListener('resize', this.configure)
     }
 
@@ -51,6 +52,20 @@ class Graph extends Component {
         if (this.camera) {
             this.cameraprops.position = this.camera.position;
         }
+        let MAX_SIZE = 100;
+        [...this.props.vectors].forEach(([id,v]) => {
+            let m = v.getMagnitude();
+           if(m > MAX_SIZE){
+               MAX_SIZE = m;
+           }
+        });
+        [...this.props.calculations].forEach(([id,c]) => {
+            let m = c.calculate(this.props.vectors).getMagnitude();
+            if(m > MAX_SIZE){
+                MAX_SIZE = m;
+            }
+        });
+        console.dir(MAX_SIZE);
         return (
             <ReactTHREE.Renderer
                 width={this.width}
@@ -69,7 +84,7 @@ class Graph extends Component {
                          */
                     }
                     {
-                        this.generateCartesians()
+                        this.generateCartesians((MAX_SIZE * 1.1).toFixed(0))
                     }
                     {
                         /*
@@ -77,22 +92,29 @@ class Graph extends Component {
                          */
 
                         [...this.props.vectors].map(([id, vector]) => {
-                            return this.renderVector(vector, true, true)
+                            return this.renderVector(vector, true, true, this.props.focused.has('v_'+ vector.id))
                         })}
                     {
-                        [...this.props.calculations].map(([id, operation]) => {
-                            return this.renderVector(operation.calculate(this.props.vectors), false, true);
-                        })
+                        [...this.props.calculations]
+                            .map(([id, operation]) => {
+                                return [id, operation.calculate(this.props.vectors)]
+                            })
+                            .filter(([id,result]) => {
+                                return [id,result.isVector]
+                            })
+                            .map(([id,result]) => this.renderVector(result, false, true, this.props.focused.has('c_' + id)))
                     }
                 </ReactTHREE.Scene>
             </ReactTHREE.Renderer>
         )
     }
 
-    renderVector = (vector, solid = true, showBounds) => {
+    renderVector = (vector, solid = true, showBounds, focus) => {
+        console.dir(focus);
+        var scale = focus ? .4 : .2
 
         var v = new THREE.Vector3(vector.x, vector.y, vector.z)
-        var boxGeometry = new THREE.BoxGeometry(.2, .2, v.length());
+        var boxGeometry = new THREE.BoxGeometry(scale, scale, v.length());
 
         var material = solid ?
             new THREE.MeshBasicMaterial({color: vector.colour.num})
@@ -108,24 +130,32 @@ class Graph extends Component {
                 material={material}
             />
         ];
-        if(showBounds){
+        if (showBounds) {
             vector.push(
                 <ReactTHREE.Mesh
                     position={v}
-                    geometry={new THREE.BoxGeometry(2*v.x, 2*v.y, 2*v.z)}
-                    material={new THREE.MeshBasicMaterial({wireframe:true, color: 0xcfcfcf, transparent: true, opacity: 0.4})}
+                    geometry={new THREE.BoxGeometry(2 * v.x, 2 * v.y, 2 * v.z)}
+                    material={new THREE.MeshBasicMaterial({
+                        wireframe: true,
+                        color: 0xcfcfcf,
+                        transparent: true,
+                        opacity: 0.4
+                    })}
                 />
             );
         }
         return (vector);
 
     }
-    generateCartesians = () => {
+    cameraChanged = () => {
+
+    }
+    generateCartesians = (size) => {
         let origin = new THREE.Vector3(0, 0, 0);
 
-        let XBound = new THREE.Vector3(100, 0, 0);
-        let YBound = new THREE.Vector3(0, 100, 0);
-        let ZBound = new THREE.Vector3(0, 0, 100);
+        let XBound = new THREE.Vector3(size, 0, 0);
+        let YBound = new THREE.Vector3(0, size, 0);
+        let ZBound = new THREE.Vector3(0, 0, size);
 
         var xGeo = new THREE.Geometry().setFromPoints([origin, XBound]);
         var yGeo = new THREE.Geometry().setFromPoints([origin, YBound]);
@@ -175,24 +205,24 @@ class Graph extends Component {
                     />
                 ],
                 //Along Z axis
-                this.generateMinorGridLines(100,20,(bound, val) => {
+                this.generateMinorGridLines(size, size/5, (bound, val) => {
                     return new THREE.Vector3(bound, 0, val)
                 }),
-                this.generateMinorGridLines(100,20,(bound, val) => {
+                this.generateMinorGridLines(size, size/5, (bound, val) => {
                     return new THREE.Vector3(0, bound, val)
                 }),
                 //Along X axis
-                this.generateMinorGridLines(100,20,(bound, val) => {
+                this.generateMinorGridLines(size, size/5, (bound, val) => {
                     return new THREE.Vector3(val, 0, bound)
                 }),
-                this.generateMinorGridLines(100,20,(bound, val) => {
-                    return new THREE.Vector3(val, bound,0 )
+                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                    return new THREE.Vector3(val, bound, 0)
                 }),
                 //Along Y axis
-                this.generateMinorGridLines(100,20,(bound, val) => {
+                this.generateMinorGridLines(size, size/5, (bound, val) => {
                     return new THREE.Vector3(0, val, bound)
                 }),
-                this.generateMinorGridLines(100,20,(bound, val) => {
+                this.generateMinorGridLines(size, size/5, (bound, val) => {
                     return new THREE.Vector3(bound, val, 0)
                 })
             ]

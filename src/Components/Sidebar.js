@@ -26,9 +26,9 @@ class Sidebar extends Component {
                 <div id={'logo'}>Vectorly</div>
                 <div className={'buttons toggle'}>
                     <button className={'hoverable'}
-                        onClick={() => {
-                            this.setState({display: 'VECTORS'})
-                        }}
+                            onClick={() => {
+                                this.setState({display: 'VECTORS'})
+                            }}
                     >
                         Vectors
                     </button>
@@ -51,6 +51,8 @@ class Sidebar extends Component {
                                         item={vector}
                                         deleteItem={this.props.deleteItem}
                                         updateItem={this.props.updateItem}
+                                        toggleFocused={this.props.toggleFocused}
+                                        focused={this.props.focused}
                                     />
                                 )
                             })
@@ -68,9 +70,12 @@ class Sidebar extends Component {
                                         item={operation}
                                         vectors={this.props.vectors}
                                         deleteCalculation={this.props.deleteCalculation}
+                                        updateCalculation={this.props.updateCalculation}
                                         updateCalculationOperation={this.props.updateCalculationOperation}
                                         updateCalculationV1={this.props.updateCalculationV1}
                                         updateCalculationV2={this.props.updateCalculationV2}
+                                        toggleFocused={this.props.toggleFocused}
+                                        focused={this.props.focused}
                                     />
                                 )
                             })
@@ -96,18 +101,21 @@ class Item extends Component {
 
         let colours = Object.keys(COLOURS).map((k) => COLOURS[k]);
         return (
-            <div className={'item'}>
+            <div className={'item'} onClick={() => {
+                this.props.toggleFocused('v_' + this.props.item.id)
+            }}>
                 <div className={'controls'}>
                     <select className={'hidden colour'}
-                           value={this.props.item.name}
+                            value={this.props.item.name}
                             style={{background: this.props.item.colour.str}}
-                           onChange={(e) => {
-                               this.props.updateItem(this.props.item, {...this.props.item, colour: colours[parseInt(e.target.value)]})
-                           }}
+                            onChange={(e) => {
+                                this.props.updateItem(this.props.item,
+                                    this.props.item.setColour(colours[parseInt(e.target.value)]))
+                            }}
                     >
                         {
                             colours.map((colour, index) => {
-                                return(
+                                return (
                                     <option value={index} style={{background: colour.str}}>
 
                                     </option>
@@ -115,11 +123,12 @@ class Item extends Component {
                             })
                         }
                     </select>
-                    <input className={'hidden'}
+                    <input className={`hidden ${this.props.focused.has('v_' + this.props.item.id) ? 'focus' : ''}`}
                            value={this.props.item.name}
                            onChange={(e) => {
-                               this.props.updateItem(this.props.item, {...this.props.item, name: e.target.value})
+                               this.props.updateItem(this.props.item, this.props.item.setName(e.target.value))
                            }}
+
                     />
                     <span>
                         <span
@@ -138,18 +147,18 @@ class Item extends Component {
                            placeholder={'X'}
                            value={this.props.item.x}
                            onChange={(e) => {
-                               this.props.updateItem(this.props.item, {...this.props.item, x: e.target.value})
+                               this.props.updateItem(this.props.item, this.props.item.setX(e.target.value))
                            }}
                     />
                     <input className="property component"
                            placeholder={'Y'} value={this.props.item.y}
                            onChange={(e) => {
-                               this.props.updateItem(this.props.item, {...this.props.item, y: e.target.value})
+                               this.props.updateItem(this.props.item, this.props.item.setY(e.target.value))
                            }}/>
                     <input className="property component"
                            placeholder={'Z'} value={this.props.item.z}
                            onChange={(e) => {
-                               this.props.updateItem(this.props.item, {...this.props.item, z: e.target.value})
+                               this.props.updateItem(this.props.item, this.props.item.setZ(e.target.value));
                            }}/>
                 </div>
             </div>
@@ -174,9 +183,16 @@ class OperationItem extends Component {
     render() {
         let vector = this.props.item.calculate(this.props.vectors);
         return (
-            <div className={'item'}>
+            <div className={'item'} onClick={() => {
+                this.props.toggleFocused('c_' + this.props.item.id)
+            }}>
                 <div className={'controls'}>
-                    <input className={'hidden'} value={'Sum'}/>
+                    <input className={`hidden ${this.props.focused.has('c_' + this.props.item.id) ? 'focus' : ''}`}
+                           value={this.props.item.name}
+                           onChange={(e) => {
+                               this.props.updateCalculation(this.props.item, this.props.item.updateName(e.target.value))
+                           }}
+                    />
                     <span>
                         <span
                             className={'material-icons hoverable'}
@@ -194,7 +210,7 @@ class OperationItem extends Component {
                             placeholder={'V1'}
                             value={this.props.item.v1}
                             onChange={(e) => {
-                                this.props.updateCalculationV1(this.props.item,  e.target.value)
+                                this.props.updateCalculationV1(this.props.item, e.target.value)
                             }}
                     >
                         {
@@ -213,12 +229,14 @@ class OperationItem extends Component {
                         <option value={0}>Plus</option>
                         <option value={1}>Minus</option>
                         <option value={2}>Cross</option>
+                        <option value={3}>Dot</option>
+                        <option value={4}>Project</option>
                     </select>
                     <select className="property calculation"
                             placeholder={'V2'}
                             value={this.props.item.v2}
                             onChange={(e) => {
-                                this.props.updateCalculationV2(this.props.item,  e.target.value)
+                                this.props.updateCalculationV2(this.props.item, e.target.value)
                             }}
                     >
                         {
@@ -226,18 +244,26 @@ class OperationItem extends Component {
                         }
                     </select>
                 </div>
+                {
+                    vector.isVector &&
+                    <div className={'properties'}>
+                        <input className={'property component'} disabled={true} value={`X: ${vector.x}`}/>
+                        <input className={'property component'} disabled={true} value={`Y: ${vector.y}`}/>
+                        <input className={'property component'} disabled={true} value={`Z: ${vector.z}`}/>
+                    </div>
+                }
+                {
+                    vector.isVector &&
+                    < div className={'properties'}>
+                        <input className={'property component'} disabled={true} value={`α: ${vector.getEulers().x}`}/>
+                        <input className={'property component'} disabled={true} value={`β: ${vector.getEulers().y}`}/>
+                        <input className={'property component'} disabled={true} value={`γ: ${vector.getEulers().z}`}/>
+                    </div>
+                }
                 <div className={'properties'}>
-                    <input className={'property component'} disabled={true} value={`X: ${vector.x}`}/>
-                    <input className={'property component'} disabled={true} value={`Y: ${vector.y}`}/>
-                    <input className={'property component'} disabled={true} value={`Z: ${vector.z}`}/>
-                </div>
-                <div className={'properties'}>
-                    <input className={'property component'} disabled={true} value={`α: ${vector.getEulers().x}`}/>
-                    <input className={'property component'} disabled={true} value={`β: ${vector.getEulers().y}`}/>
-                    <input className={'property component'} disabled={true} value={`γ: ${vector.getEulers().z}`}/>
-                </div>
-                <div className={'properties'}>
-                    <input className={'property'} disabled={true} value={`Magnitude: ${vector.getMagnitude()}`} style={{width: '100%'}}/>
+                    <input className={'property'} disabled={true}
+                           value={`Magnitude: ${vector.isVector ? vector.getMagnitude() : vector.x}`}
+                           style={{width: '100%'}}/>
                 </div>
 
 

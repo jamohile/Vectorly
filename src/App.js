@@ -12,12 +12,14 @@ class Vector {
     x;
     y;
     z;
+    isVector;
     colour;
 
-    constructor(x, y, z, temp, name, colour) {
+    constructor(x, y, z, isVector, temp, name, colour) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.isVector = isVector;
         if (!temp) {
             this.id = Vector.LAST_ID + 1;
             this.colour = colour;
@@ -25,15 +27,43 @@ class Vector {
             Vector.LAST_ID += 1;
         }
     }
-
+    setX(x){
+        this.x = x;
+        return this;
+    }
+    setY(y){
+        this.y = y;
+        return this;
+    }
+    setZ(z){
+        this.z = z;
+        return this;
+    }
+    setColour(color){
+        this.colour = color;
+        return this;
+    }
+    setName(name){
+        this.name = name;
+        return this;
+    }
     getMagnitude() {
         return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
     }
-    getEulers(){
+
+    getEulers() {
         return {
-            x: Math.acos(this.x/this.getMagnitude()),
-            y: Math.acos(this.y/this.getMagnitude()),
-            z: Math.acos(this.z/this.getMagnitude())
+            x: Math.acos(this.x / this.getMagnitude()),
+            y: Math.acos(this.y / this.getMagnitude()),
+            z: Math.acos(this.z / this.getMagnitude())
+        }
+    }
+
+    getUnit() {
+        return {
+            x: this.x / this.getMagnitude(),
+            y: this.y / this.getMagnitude(),
+            z: this.z / this.getMagnitude()
         }
     }
 }
@@ -47,13 +77,15 @@ class Calculation {
     operation;
     v1;
     v2;
+    name;
 
-    constructor(v1ID, v2ID, operation) {
+    constructor(v1ID, v2ID, operation, name) {
         this.id = Calculation.LAST_ID + 1;
 
         this.operation = operation;
         this.v1 = v1ID;
         this.v2 = v2ID;
+        this.name = name;
 
         Calculation.LAST_ID += 1;
 
@@ -62,7 +94,12 @@ class Calculation {
 
     calculate(vectors) {
         let result = this.operation(vectors.get(parseFloat(this.v1)), vectors.get(parseFloat(this.v2)));
-        return new Vector(result.x, result.y, result.z, true);
+        return new Vector(result.x, result.y, result.z, result.isVector, true);
+    }
+
+    updateName(name){
+        this.name = name;
+        return this;
     }
 
     updateOperation(operation) {
@@ -102,6 +139,12 @@ export class Operations {
             case 2:
                 return Operations.cross;
                 break;
+            case 3:
+                return Operations.dot;
+                break;
+            case 4:
+                return Operations.project;
+                break;
         }
     }
 
@@ -115,6 +158,12 @@ export class Operations {
                 break;
             case Operations.cross:
                 return 2;
+                break;
+            case Operations.dot:
+                return 3;
+                break;
+            case Operations.project:
+                return 4;
             default:
                 return 0;
         }
@@ -122,6 +171,7 @@ export class Operations {
 
     static add(v1, v2) {
         var result = {
+            isVector: true,
             x: parseFloat(v1.x) + parseFloat(v2.x),
             y: parseFloat(v1.y) + parseFloat(v2.y),
             z: parseFloat(v1.z) + parseFloat(v2.z)
@@ -131,6 +181,7 @@ export class Operations {
 
     static subtract(v1, v2) {
         var result = {
+            isVector: true,
             x: parseFloat(v1.x) - parseFloat(v2.x),
             y: parseFloat(v1.y) - parseFloat(v2.y),
             z: parseFloat(v1.z) - parseFloat(v2.z)
@@ -140,11 +191,30 @@ export class Operations {
 
     static cross(v1, v2) {
         var result = {
+            isVector: true,
             x: parseFloat(v1.y) * parseFloat(v2.z) - parseFloat(v1.z) * parseFloat(v2.y),
             y: parseFloat(v1.z) * parseFloat(v2.x) - parseFloat(v1.x) * parseFloat(v2.z),
             z: parseFloat(v1.x) * parseFloat(v2.y) - parseFloat(v1.y) * parseFloat(v2.x)
         }
         return result;
+    }
+
+    static dot(v1, v2) {
+        return {
+            isVector: false,
+            x: v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+        }
+    }
+    static project(v1, v2){
+        let coeff = Operations.dot(v1, v2).x / v2.getMagnitude()
+        console.dir(coeff);
+        return{
+            isVector: true,
+            x: v2.x / v2.getMagnitude() * coeff,
+            y: v2.y / v2.getMagnitude() * coeff,
+            z: v2.z / v2.getMagnitude() * coeff
+        }
+
     }
 }
 
@@ -163,21 +233,21 @@ export const COLOURS = {
 class App extends Component {
     constructor() {
         super();
-        var v1 = new Vector(10, 0, 0, false, 'Force', COLOURS.blue);
-        var v2 = new Vector(0, 10, 0, false, 'Displacement', COLOURS.red);
+        var v1 = new Vector(10, 0, 0, true, false, 'X', COLOURS.blue);
+        var v2 = new Vector(0, 10, 0, true, false, 'Y', COLOURS.red);
+        var v3 = new Vector(0, 0, 10, true, false, 'Z', COLOURS.green);
 
         var vectors = new Map();
         var calculations = new Map();
 
         vectors.set(v1.id, v1);
         vectors.set(v2.id, v2);
-
-        var calc = new Calculation(v1.id, v2.id, Operations.add);
-        calculations.set(calc.id, calc);
+        vectors.set(v3.id, v3);
 
         this.state = {
             vectors: vectors,
-            calculations: calculations
+            calculations: calculations,
+            focused:new Map()
         }
 
     }
@@ -195,6 +265,7 @@ class App extends Component {
                     height={window.innerHeight}
                     vectors={this.state.vectors}
                     calculations={this.state.calculations}
+                    focused={this.state.focused}
                 />
                 <Sidebar
                     vectors={this.state.vectors}
@@ -211,6 +282,9 @@ class App extends Component {
                     deleteCalculation={(item) => {
                         this.deleteCalculation(item)
                     }}
+                    updateCalculation={(item, updated) => {
+                        this.updateCalculation(item, updated);
+                    }}
                     updateItem={(item, updated) => {
                         this.updateItem(item, updated)
                     }}
@@ -223,6 +297,10 @@ class App extends Component {
                     updateCalculationV2={(item, v2ID) => {
                         this.updateCalculationV2(item, v2ID)
                     }}
+                    toggleFocused={(id) => {
+                        this.toggleFocused(id)
+                    }}
+                    focused={this.state.focused}
                 />
             </div>
         );
@@ -232,7 +310,7 @@ class App extends Component {
 
     addVector() {
         let vectors = this.state.vectors;
-        var vector = new Vector(10, 10, 10, false, 'Vector', COLOURS.blue);
+        var vector = new Vector(10, 10, 10, true, false, 'Vector', COLOURS.blue);
         vectors.set(vector.id, vector);
 
         this.setState({
@@ -252,7 +330,7 @@ class App extends Component {
             } else {
                 v2 = vectors[0][0];
             }
-            var calc = new Calculation(v1, v2, Operations.add);
+            var calc = new Calculation(v1, v2, Operations.add, 'Calculation');
             calculations.set(calc.id, calc);
 
             this.setState({
@@ -291,6 +369,13 @@ class App extends Component {
         });
     }
 
+    updateCalculation(item, updated){
+        var modifiedCalcs = this.state.calculations;
+        modifiedCalcs.set(item.id, updated);
+        this.setState({
+            calculations: modifiedCalcs
+        });
+    }
     updateCalculationOperation(item, operation) {
         var modifiedCalcs = this.state.calculations;
         var modifiedCalcs = this.state.calculations;
@@ -314,6 +399,28 @@ class App extends Component {
         this.setState({
             calculations: modifiedCalcs
         });
+    }
+
+    setFocused(id){
+        let focused = this.state.focused;
+        focused.set(id, true);
+        this.setState({
+            focused: focused
+        });
+    }
+    removeFocused(id){
+        let focused = this.state.focused;
+        focused.delete(id);
+        this.setState({
+            focused: focused
+        });
+    }
+    toggleFocused(id){
+        if(this.state.focused.has(id)){
+            this.removeFocused(id)
+        }else{
+            this.setFocused(id);
+        }
     }
 }
 
