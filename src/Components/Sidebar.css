@@ -1,0 +1,103 @@
+#sidebar{
+    position: relative;
+    float: right;
+    width: 252px;
+    height: calc(100% - 4*var(--standard_padding));
+    margin: var(--standard_padding);
+
+    font-family: Arvo;
+    padding: var(--standard_padding);
+    background: var(--lightgray);
+    color: var(--text_primary);
+
+    transition: all 0.4s ease-in-out;
+}
+
+#sidebar > #toggle{
+    position: absolute;
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    float: left;
+    top: calc(50% - 16px);
+    left: -40px;
+    background: var(--gray);
+    border-radius: 16px;
+    color: white;
+    user-select: none;
+}
+
+#sidebar.closed #toggle{
+    transform: rotateZ(180deg);
+}
+
+#sidebar.closed{
+    margin-right: -268px;
+}
+
+#sidebar .buttons{
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    font-size: 12px;
+    width: 252px;
+    height: 64px;
+}
+#sidebar .buttons.toggle{
+    position: static;
+}
+
+#sidebar #logo{
+    height: 32px;
+    line-height: 32px;
+}
+#sidebar #items{
+    height: calc(100% - 32px - 128px);
+    overflow-y: auto;
+}
+
+#sidebar .item .controls{
+    position: relative;
+}
+#sidebar .item .controls .colour{
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: rgba(20,20,20,0.2);
+    text-align: center;
+}
+#sidebar .item .controls .colour option{
+    padding: 4px;
+}
+#sidebar .item .controls input{
+    width: 50%;
+}
+
+#sidebar .item .controls span{
+    font-size: small;
+    float: right;
+}
+
+#sidebar .item .properties{
+    display: flex;
+}
+#sidebar .item .property{
+    margin: 4px;
+    width: 33%;
+    height: 32px;
+    border: solid 2px lightgrey;
+    border-radius: 6px;
+    text-align: center;
+}
+#sidebar .item .property:first-of-type{
+    margin-left: 0;
+}
+#sidebar .item .property:last-of-type{
+    margin-right: 0;
+}
+#sidebar .item .property{
+    width: 33%;
+}

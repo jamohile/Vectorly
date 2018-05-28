@@ -1,0 +1,67 @@
+:root{
+  --standard_padding: 8px;
+  --lightgray: #F8F8F9;
+  --gray: #47525E;
+  --text_primary:#47525E;
+  --placeholder:#cfcfcf;
+
+  --primary:#00A6FF;
+  --accent:#FF9052;
+  --negative: #F95F62;
+}
+
+.App {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+button{
+  background: var(--primary);
+  outline: none;
+  border: none;
+  margin: 8px;
+  width: 96px;
+  padding: 8px;
+  color: white;
+  font-family: Arvo;
+  border-radius: 2px;
+}
+button.accent{
+  background: var(--accent);
+}
+
+input, select{
+  font-family: Arvo;
+  color: var(--gray);
+  font-weight: bold;
+  padding: 4px;
+}
+
+input.hidden, select.hidden{
+  text-align: center;
+  padding: 4px;
+  color: var(--gray);
+  background: none;
+  border: none;
+  font-weight: normal;
+}
+
+input:focus, select:focus{
+  outline: none;
+  box-shadow: 0 1px 2px rgba(20,20,20,0.2);
+}
+
+::placeholder{
+  color: var(--placeholder);
+}
+
+.hoverable{
+  transform: scale(1);
+  transition: transform 0.2s;
+}
+.hoverable:hover{
+  transform: scale(1.1);
+}
+

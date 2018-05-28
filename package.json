@@ -1,0 +1,20 @@
+{
+  "name": "vectorly",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "15.*",
+    "react-dom": "^15.*",
+    "react-scripts": "1.1.4",
+    "react-three": "^0.9.7",
+    "three": "^0.92.0",
+    "three-orbit-controls": "^82.1.0",
+    "three.meshline": "^1.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
