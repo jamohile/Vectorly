@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './Sidebar.css'
-import {COLOURS, Operations} from "../App";
+import {COLOURS, Operations, Vector} from "../App";
 
 class Sidebar extends Component {
     state = {
@@ -69,6 +69,7 @@ class Sidebar extends Component {
                                     <OperationItem
                                         item={operation}
                                         vectors={this.props.vectors}
+                                        addVector = {this.props.addVector}
                                         deleteCalculation={this.props.deleteCalculation}
                                         updateCalculation={this.props.updateCalculation}
                                         updateCalculationOperation={this.props.updateCalculationOperation}
@@ -84,7 +85,7 @@ class Sidebar extends Component {
                 }
                 <div className={'buttons'}>
                     Add New<br/>
-                    <button className={'hoverable'} onClick={this.props.addVector}>Vector</button>
+                    <button className={'hoverable'} onClick={() => this.props.addVector()}>Vector</button>
                     <button className={'hoverable accent'} onClick={this.props.addCalculation}>Calculation</button>
                 </div>
             </div>
@@ -117,7 +118,7 @@ class Item extends Component {
                             colours.map((colour, index) => {
                                 return (
                                     <option value={index} style={{background: colour.str}}>
-
+                                        {colour.name}
                                     </option>
                                 )
                             })
@@ -231,6 +232,7 @@ class OperationItem extends Component {
                         <option value={2}>Cross</option>
                         <option value={3}>Dot</option>
                         <option value={4}>Project</option>
+                        <option value={5}>Perpendicular Project</option>
                     </select>
                     <select className="property calculation"
                             placeholder={'V2'}
@@ -265,6 +267,21 @@ class OperationItem extends Component {
                            value={`Magnitude: ${vector.isVector ? vector.getMagnitude() : vector.x}`}
                            style={{width: '100%'}}/>
                 </div>
+                {
+                    vector.isVector &&
+                    <button className={'hoverable'} onClick={() => {
+                        let exportedVector = new Vector(vector.x, vector.y, vector.z, true, false, vector.name, vector.colour);
+                        this.props.addVector(exportedVector)
+                    }}>Export Vector</button>
+                }
+                {
+                    vector.isVector &&
+                    <button className={'hoverable'} onClick={() => {
+                        let exportedVector = new Vector(vector.x, vector.y, vector.z, true, false, vector.name, vector.colour);
+                        this.props.addVector(exportedVector)
+                        this.props.deleteCalculation(this.props.item)
+                    }}>Export & Clear</button>
+                }
 
 
             </div>

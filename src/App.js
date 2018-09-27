@@ -4,7 +4,7 @@ import './App.css';
 import Sidebar from './Components/Sidebar';
 import Graph from './Components/Graph/Graph';
 
-class Vector {
+export class Vector {
     static LAST_ID = 0;
 
     id
@@ -20,33 +20,40 @@ class Vector {
         this.y = y;
         this.z = z;
         this.isVector = isVector;
+        this.colour = colour || COLOURS.blue;
+        this.name = name;
         if (!temp) {
             this.id = Vector.LAST_ID + 1;
-            this.colour = colour;
-            this.name = name;
             Vector.LAST_ID += 1;
         }
+
     }
-    setX(x){
+
+    setX(x) {
         this.x = x;
         return this;
     }
-    setY(y){
+
+    setY(y) {
         this.y = y;
         return this;
     }
-    setZ(z){
+
+    setZ(z) {
         this.z = z;
         return this;
     }
-    setColour(color){
+
+    setColour(color) {
         this.colour = color;
         return this;
     }
-    setName(name){
+
+    setName(name) {
         this.name = name;
         return this;
     }
+
     getMagnitude() {
         return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
     }
@@ -94,10 +101,12 @@ class Calculation {
 
     calculate(vectors) {
         let result = this.operation(vectors.get(parseFloat(this.v1)), vectors.get(parseFloat(this.v2)));
-        return new Vector(result.x, result.y, result.z, result.isVector, true);
+        console.dir('calc');
+        console.dir(this);
+        return new Vector(result.x, result.y, result.z, result.isVector, true, this.name);
     }
 
-    updateName(name){
+    updateName(name) {
         this.name = name;
         return this;
     }
@@ -145,6 +154,8 @@ export class Operations {
             case 4:
                 return Operations.project;
                 break;
+            case 5:
+                return Operations.perpendicularProject
         }
     }
 
@@ -164,6 +175,9 @@ export class Operations {
                 break;
             case Operations.project:
                 return 4;
+                break;
+            case Operations.perpendicularProject:
+                return 5;
             default:
                 return 0;
         }
@@ -205,10 +219,11 @@ export class Operations {
             x: v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
         }
     }
-    static project(v1, v2){
+
+    static project(v1, v2) {
         let coeff = Operations.dot(v1, v2).x / v2.getMagnitude()
         console.dir(coeff);
-        return{
+        return {
             isVector: true,
             x: v2.x / v2.getMagnitude() * coeff,
             y: v2.y / v2.getMagnitude() * coeff,
@@ -216,17 +231,22 @@ export class Operations {
         }
 
     }
+
+    static perpendicularProject(v1, v2) {
+        let proj = Operations.project(v1, v2);
+        return Operations.subtract(v1, proj);
+    }
 }
 
 export const COLOURS = {
-    blue: {num: 0x00A6FF, str: '#00A6FF'},
-    orange: {num: 0xFF9052, str: '#FF9052'},
-    red: {num: 0xF95F62, str: '#F95F62'},
-    green: {num: 0x77D353, str: '#77D353'},
-    yellow: {num: 0xFFD185, str: '#FFD185'},
-    gold: {num: 0xFFBA5C, str: '#FFBA5C'},
-    brown: {num: 0xB8977E, str: '#B8977E'},
-    purple: {num: 0x976DD0, str: '#976DD0'}
+    blue: {num: 0x00A6FF, str: '#00A6FF', name: 'Blue'},
+    orange: {num: 0xFF9052, str: '#FF9052', name: 'Orange'},
+    red: {num: 0xF95F62, str: '#F95F62', name: 'Red'},
+    green: {num: 0x77D353, str: '#77D353', name: 'Green'},
+    yellow: {num: 0xFFD185, str: '#FFD185', name: 'Yellow'},
+    gold: {num: 0xFFBA5C, str: '#FFBA5C', name: 'Gold'},
+    brown: {num: 0xB8977E, str: '#B8977E', name: 'Brown'},
+    purple: {num: 0x976DD0, str: '#976DD0', name: 'Purple'}
 
 }
 
@@ -247,7 +267,7 @@ class App extends Component {
         this.state = {
             vectors: vectors,
             calculations: calculations,
-            focused:new Map()
+            focused: new Map()
         }
 
     }
@@ -257,7 +277,6 @@ class App extends Component {
     }
 
     render() {
-        console.dir('render');
         return (
             <div className="App">
                 <Graph
@@ -270,8 +289,8 @@ class App extends Component {
                 <Sidebar
                     vectors={this.state.vectors}
                     calculations={this.state.calculations}
-                    addVector={() => {
-                        this.addVector()
+                    addVector={(v) => {
+                        this.addVector(v)
                     }}
                     addCalculation={() => {
                         this.addCalculation()
@@ -308,9 +327,9 @@ class App extends Component {
 
     resize = () => this.forceUpdate();
 
-    addVector() {
+    addVector(v) {
         let vectors = this.state.vectors;
-        var vector = new Vector(10, 10, 10, true, false, 'Vector', COLOURS.blue);
+        var vector = v || new Vector(10, 10, 10, true, false, 'Vector', COLOURS.blue);
         vectors.set(vector.id, vector);
 
         this.setState({
@@ -369,13 +388,15 @@ class App extends Component {
         });
     }
 
-    updateCalculation(item, updated){
+    updateCalculation(item, updated) {
+
         var modifiedCalcs = this.state.calculations;
         modifiedCalcs.set(item.id, updated);
         this.setState({
             calculations: modifiedCalcs
         });
     }
+
     updateCalculationOperation(item, operation) {
         var modifiedCalcs = this.state.calculations;
         var modifiedCalcs = this.state.calculations;
@@ -401,24 +422,26 @@ class App extends Component {
         });
     }
 
-    setFocused(id){
+    setFocused(id) {
         let focused = this.state.focused;
         focused.set(id, true);
         this.setState({
             focused: focused
         });
     }
-    removeFocused(id){
+
+    removeFocused(id) {
         let focused = this.state.focused;
         focused.delete(id);
         this.setState({
             focused: focused
         });
     }
-    toggleFocused(id){
-        if(this.state.focused.has(id)){
+
+    toggleFocused(id) {
+        if (this.state.focused.has(id)) {
             this.removeFocused(id)
-        }else{
+        } else {
             this.setFocused(id);
         }
     }
