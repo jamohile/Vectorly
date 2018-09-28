@@ -117,12 +117,16 @@ class Calculation {
     }
 
     updateV1(v1) {
-        this.v1 = v1;
+        Calculation.removeVector(this.v1)
+        this.v1 = parseInt(v1);
+        Calculation.USED_VECTORS.push(this.v1);
         return this
     }
 
     updateV2(v2) {
-        this.v2 = v2;
+        Calculation.removeVector(this.v1);
+        this.v2 = parseInt(v2);
+        Calculation.USED_VECTORS.push(this.v2);
         return this
     }
 
@@ -131,7 +135,9 @@ class Calculation {
     }
 
     static removeVector(vID) {
-        Calculation.USED_VECTORS.splice(Calculation.USED_VECTORS.indexOf(vID), 1);
+        if(Calculation.USED_VECTORS.includes(vID)){
+            Calculation.USED_VECTORS.splice(Calculation.USED_VECTORS.indexOf(vID), 1);
+        }
     }
 }
 
@@ -359,6 +365,7 @@ class App extends Component {
     }
 
     deleteItem(item) {
+        console.dir(item);
         if (!Calculation.usesVector(item.id)) {
             var modifiedVectors = this.state.vectors;
             modifiedVectors.delete(item.id);

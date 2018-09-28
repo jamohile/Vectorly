@@ -238,13 +238,13 @@ class Graph extends Component {
             gapSize: 10,
             transparent: true, opacity: 0.05
         });
-
+        const cleanNum = num.toFixed(0);
         return (
-            [...Array(2 * num + 1).keys()].map((n, i) => {
+            [...Array(2 * cleanNum + 1).keys()].map((n, i) => {
                 return (
                     <ReactTHREE.Line
                         geometry={
-                            new THREE.Geometry().setFromPoints([modifier(-bound, bound - (bound / num) * n), modifier(bound, bound - (bound / num) * n)])
+                            new THREE.Geometry().setFromPoints([modifier(-bound, bound - (bound / cleanNum) * n), modifier(bound, bound - (bound / cleanNum) * n)])
                         }
                         material={negativeMaterial}
                     />
