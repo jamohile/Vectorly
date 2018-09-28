@@ -24,7 +24,6 @@ class Graph extends Component {
             lookat: new THREE.Vector3(0, 0, 0)
         }
         this.configure();
-        console.dir('here');
     }
 
     componentDidMount() {
@@ -38,6 +37,7 @@ class Graph extends Component {
     }
 
     configure() {
+        let container = document.getElementById('root');
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.aspectratio = this.width / this.height;
