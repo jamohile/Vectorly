@@ -2,34 +2,37 @@ import React, {Component} from 'react'
 import ReactTHREE from 'react-three';
 import * as THREE from 'three';
 import './Graph.css';
-import {COLOURS} from "../../App";
+import {COLOURS} from "../Colours";
 
 var OrbitControls = require('three-orbit-controls')(THREE)
 var MeshLine = require('three.meshline')
 
 class Graph extends Component {
-    camera;
-    aspectratio;
-    cameraprops = {};
-
-    width;
-    height;
 
     constructor(props) {
         super(props);
+
+        this.camera = undefined;
+        this.aspectratio = undefined;
+        this.cameraprops = {};
+
+        this.width = undefined;
+        this.height = undefined;
+
         this.cameraprops = {
             fov: 75,
             near: 1, far: 5000,
             position: new THREE.Vector3(20, 20, 20),
             lookat: new THREE.Vector3(0, 0, 0)
         }
-        this.configure();
     }
 
+    componentWillMount(){
+        this.configure()
+    }
     componentDidMount() {
-        const controls = new OrbitControls(this.camera, document.querySelector('canvas'))
+        const controls = new OrbitControls(this.camera, this.refs['renderer']._THREErenderer.domElement)
         controls.addEventListener('change', this.cameraChanged);
-        window.addEventListener('resize', this.configure)
     }
 
     componentWillUpdate() {
@@ -38,8 +41,8 @@ class Graph extends Component {
 
     configure() {
         let container = document.getElementById('root');
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
+        this.width = this.props.width;
+        this.height = this.props.height;
         this.aspectratio = this.width / this.height;
         this.cameraprops = {
             ...this.cameraprops, ...{
@@ -65,13 +68,14 @@ class Graph extends Component {
                 MAX_SIZE = m;
             }
         });
-        console.dir(MAX_SIZE);
+
         return (
             <ReactTHREE.Renderer
                 width={this.width}
                 height={this.height}
                 background={'#ffffff'}
                 sortObjects={false}
+                ref={'renderer'}
             >
                 <ReactTHREE.Scene
                     width={this.width} height={this.height} camera="maincamera">

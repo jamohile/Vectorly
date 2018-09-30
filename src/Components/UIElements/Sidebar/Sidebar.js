@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './Sidebar.css'
-import {COLOURS, Operations, Vector} from "../App";
+import {Operations} from "../../Math/Operations";
+import {COLOURS} from "../../Colours";
+import {Vector} from "../../Math/Vector";
 
 class Sidebar extends Component {
     state = {

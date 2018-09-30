@@ -1,4 +1,5 @@
 #sidebar{
+    z-index: 200;
     position: relative;
     float: right;
     width: 252px;
