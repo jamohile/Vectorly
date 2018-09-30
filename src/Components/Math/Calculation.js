@@ -1,4 +1,5 @@
 import {Vector} from "./Vector";
+import {COLOURS} from "../Colours";
 
 export class Calculation {
     static LAST_ID = 0;
@@ -28,7 +29,10 @@ export class Calculation {
         let result = this.operation(vectors.get(parseFloat(this.v1)), vectors.get(parseFloat(this.v2)));
         console.dir('calc');
         console.dir(this);
-        return new Vector(result.x, result.y, result.z, result.isVector, true, this.name);
+        console.dir(result);
+        var vector = new Vector(result.x, result.y, result.z, result.isVector, true, this.name, COLOURS.orange, result.fromx, result.fromy, result.fromz);
+        console.dir(vector);
+        return vector
     }
 
     updateName(name) {

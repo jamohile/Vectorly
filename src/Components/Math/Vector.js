@@ -5,16 +5,28 @@ export class Vector {
 
     id
     name;
+
+    fromx;
+    fromy;
+    fromz;
+
+
     x;
     y;
     z;
     isVector;
     colour;
 
-    constructor(x, y, z, isVector, temp, name, colour) {
+    constructor(x, y, z, isVector, temp, name, colour, fromx, fromy, fromz) {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        console.dir(fromx);
+        this.fromx = fromx ? fromx : 0
+        this.fromy = fromy || 0
+        this.fromz = fromz || 0
+
         this.isVector = isVector;
         this.colour = colour || COLOURS.blue;
         this.name = name;
@@ -30,14 +42,27 @@ export class Vector {
         return this;
     }
 
+    setOriginX(x){
+        this.fromx = x;
+        return this
+    }
+
     setY(y) {
         this.y = y;
         return this;
+    }
+    setOriginY(y){
+        this.fromy = y;
+        return this
     }
 
     setZ(z) {
         this.z = z;
         return this;
+    }
+    setOriginZ(z){
+        this.fromz = z;
+        return this
     }
 
     setColour(color) {

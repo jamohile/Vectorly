@@ -55,6 +55,7 @@ class Sidebar extends Component {
                                         updateItem={this.props.updateItem}
                                         toggleFocused={this.props.toggleFocused}
                                         focused={this.props.focused}
+                                        advanced={this.props.advanced}
                                     />
                                 )
                             })
@@ -145,6 +146,28 @@ class Item extends Component {
                         >delete</span>
                     </span>
                 </div>
+                {
+                    this.props.advanced &&
+                    <div className={'properties'}>
+                        <input className="property component"
+                               placeholder={'X0'}
+                               value={this.props.item.fromx}
+                               onChange={(e) => {
+                                   this.props.updateItem(this.props.item, this.props.item.setOriginX(e.target.value))
+                               }}
+                        />
+                        <input className="property component"
+                               placeholder={'Y0'} value={this.props.item.fromy}
+                               onChange={(e) => {
+                                   this.props.updateItem(this.props.item, this.props.item.setOriginY(e.target.value))
+                               }}/>
+                        <input className="property component"
+                               placeholder={'Z0'} value={this.props.item.fromz}
+                               onChange={(e) => {
+                                   this.props.updateItem(this.props.item, this.props.item.setOriginZ(e.target.value));
+                               }}/>
+                    </div>
+                }
                 <div className={'properties'}>
                     <input className="property component"
                            placeholder={'X'}
@@ -164,6 +187,14 @@ class Item extends Component {
                                this.props.updateItem(this.props.item, this.props.item.setZ(e.target.value));
                            }}/>
                 </div>
+                {
+                    this.props.advanced &&
+                    <div className={'properties'}>
+                        <input className={'property'} disabled={true}
+                               value={`Magnitude: ${this.props.item.isVector ? this.props.item.getMagnitude() : this.props.item.x}`}
+                               style={{width: '100%'}}/>
+                    </div>
+                }
             </div>
         )
     }
@@ -272,14 +303,14 @@ class OperationItem extends Component {
                 {
                     vector.isVector &&
                     <button className={'hoverable'} onClick={() => {
-                        let exportedVector = new Vector(vector.x, vector.y, vector.z, true, false, vector.name, vector.colour);
+                        let exportedVector = new Vector(vector.x, vector.y, vector.z, true, false, vector.name, vector.colour, vector.fromx, vector.fromy, vector.fromz);
                         this.props.addVector(exportedVector)
                     }}>Export Vector</button>
                 }
                 {
                     vector.isVector &&
                     <button className={'hoverable'} onClick={() => {
-                        let exportedVector = new Vector(vector.x, vector.y, vector.z, true, false, vector.name, vector.colour);
+                        let exportedVector = new Vector(vector.x, vector.y, vector.z, true, false, vector.name, vector.colour, vector.fromx, vector.fromy, vector.fromz);
                         this.props.addVector(exportedVector)
                         this.props.deleteCalculation(this.props.item)
                     }}>Export & Clear</button>

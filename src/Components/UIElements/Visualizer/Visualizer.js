@@ -73,6 +73,7 @@ export default class Visualizer extends Component{
                             this.toggleFocused(id)
                         }}
                         focused={this.state.focused}
+                        advanced={this.props.advanced}
                     />
                 }
             </div>

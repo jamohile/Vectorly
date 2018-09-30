@@ -3,6 +3,7 @@ import ReactTHREE from 'react-three';
 import * as THREE from 'three';
 import './Graph.css';
 import {COLOURS} from "../Colours";
+import {Operations} from "../Math/Operations";
 
 var OrbitControls = require('three-orbit-controls')(THREE)
 var MeshLine = require('three.meshline')
@@ -118,7 +119,15 @@ class Graph extends Component {
         var scale = focus ? .4 : .2
 
         var v = new THREE.Vector3(vector.x, vector.y, vector.z)
+        var origin = new THREE.Vector3(2 * vector.fromx, 2* vector.fromy, 2* vector.fromz);
+
+        var total = Operations.add(v, origin);
+        total = new THREE.Vector3(total.x, total.y, total.z);
+
         var boxGeometry = new THREE.BoxGeometry(scale, scale, v.length());
+
+        var sphereGeometry = new THREE.SphereGeometry(0.3);
+
 
         var material = solid ?
             new THREE.MeshBasicMaterial({color: vector.colour.num})
@@ -127,9 +136,11 @@ class Graph extends Component {
 
         boxGeometry.lookAt(v);
 
+        var midpoint = new THREE.Vector3(total.x/2, total.y/2, total.z/2)
+
         var vector = [
             <ReactTHREE.Mesh
-                position={v.divideScalar(2)}
+                position={midpoint}
                 geometry={boxGeometry}
                 material={material}
             />
@@ -137,8 +148,8 @@ class Graph extends Component {
         if (showBounds) {
             vector.push(
                 <ReactTHREE.Mesh
-                    position={v}
-                    geometry={new THREE.BoxGeometry(2 * v.x, 2 * v.y, 2 * v.z)}
+                    position={midpoint}
+                    geometry={new THREE.BoxGeometry(v.x, v.y, v.z)}
                     material={new THREE.MeshBasicMaterial({
                         wireframe: true,
                         color: 0xcfcfcf,
@@ -148,6 +159,13 @@ class Graph extends Component {
                 />
             );
         }
+        vector.push(
+            <ReactTHREE.Mesh
+                position={new THREE.Vector3(total.x - origin.x/2, total.y - origin.y/2, total.z - origin.z/2)}
+                geometry={sphereGeometry}
+                material={material}
+            />
+        )
         return (vector);
 
     }

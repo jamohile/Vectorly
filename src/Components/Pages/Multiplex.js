@@ -85,6 +85,7 @@ const VisualizerUnit = (index, deleteHandler, size) => {
                     vectors={[v1, v2, v3]}
                     height={3 * window.innerHeight / 4}
                     width={(window.innerWidth - 32)/size}
+                    advanced
                     editable
                 />
             </div>

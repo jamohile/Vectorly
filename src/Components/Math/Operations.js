@@ -51,7 +51,10 @@ export class Operations {
             isVector: true,
             x: parseFloat(v1.x) + parseFloat(v2.x),
             y: parseFloat(v1.y) + parseFloat(v2.y),
-            z: parseFloat(v1.z) + parseFloat(v2.z)
+            z: parseFloat(v1.z) + parseFloat(v2.z),
+            fromx: parseFloat(v1.fromx),
+            fromy: parseFloat(v1.fromy),
+            fromz: parseFloat(v1.fromz)
         }
         return result;
     }
@@ -61,7 +64,10 @@ export class Operations {
             isVector: true,
             x: parseFloat(v1.x) - parseFloat(v2.x),
             y: parseFloat(v1.y) - parseFloat(v2.y),
-            z: parseFloat(v1.z) - parseFloat(v2.z)
+            z: parseFloat(v1.z) - parseFloat(v2.z),
+            fromx: parseFloat(v1.x),
+            fromy: parseFloat(v1.y),
+            fromz: parseFloat(v1.z)
         }
         return result;
     }
@@ -71,7 +77,10 @@ export class Operations {
             isVector: true,
             x: parseFloat(v1.y) * parseFloat(v2.z) - parseFloat(v1.z) * parseFloat(v2.y),
             y: parseFloat(v1.z) * parseFloat(v2.x) - parseFloat(v1.x) * parseFloat(v2.z),
-            z: parseFloat(v1.x) * parseFloat(v2.y) - parseFloat(v1.y) * parseFloat(v2.x)
+            z: parseFloat(v1.x) * parseFloat(v2.y) - parseFloat(v1.y) * parseFloat(v2.x),
+            fromx: parseFloat(v1.x),
+            fromy: parseFloat(v1.y),
+            fromz: parseFloat(v1.z)
         }
         return result;
     }
@@ -90,7 +99,10 @@ export class Operations {
             isVector: true,
             x: v2.x / v2.getMagnitude() * coeff,
             y: v2.y / v2.getMagnitude() * coeff,
-            z: v2.z / v2.getMagnitude() * coeff
+            z: v2.z / v2.getMagnitude() * coeff,
+            fromx: parseFloat(v1.x),
+            fromy: parseFloat(v1.y),
+            fromz: parseFloat(v1.z)
         }
 
     }
