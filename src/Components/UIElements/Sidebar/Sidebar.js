@@ -60,6 +60,34 @@ class Sidebar extends Component {
                                 )
                             })
                         }
+
+                        {
+                            this.props.vectors.size > 0 &&
+                            <div>
+                                <button className={'hoverable'}
+                                        onClick={() => {
+                                            var lv = [...this.props.vectors][this.props.vectors.size - 1][1];
+                                            this.props.addVector(
+                                                new Vector(10, 10, 10, true, false, 'Vector', COLOURS.green, parseFloat(lv.fromx) + parseFloat(lv.x), parseFloat(lv.fromy) + parseFloat(lv.y), parseFloat(lv.fromz) + parseFloat(lv.z))
+                                            )
+                                        }
+                                        }
+                                >
+                                    Chain
+                                </button>
+                                <button className={'hoverable'}
+                                        onClick={() => {
+                                            var lv = [...this.props.vectors][this.props.vectors.size - 1][1];
+                                            this.props.addVector(
+                                                new Vector(parseFloat(lv.fromx) + parseFloat(lv.x), parseFloat(lv.fromy) + parseFloat(lv.y), parseFloat(lv.fromz) + parseFloat(lv.z), true, false, 'Vector', COLOURS.green)
+                                            )
+                                        }
+                                        }
+                                >
+                                    Resolve
+                                </button>
+                            </div>
+                        }
                     </div>
                 }
                 {
@@ -72,7 +100,7 @@ class Sidebar extends Component {
                                     <OperationItem
                                         item={operation}
                                         vectors={this.props.vectors}
-                                        addVector = {this.props.addVector}
+                                        addVector={this.props.addVector}
                                         deleteCalculation={this.props.deleteCalculation}
                                         updateCalculation={this.props.updateCalculation}
                                         updateCalculationOperation={this.props.updateCalculationOperation}
