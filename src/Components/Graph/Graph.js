@@ -58,13 +58,13 @@ class Graph extends Component {
         }
         let MAX_SIZE = 100;
         [...this.props.vectors].forEach(([id,v]) => {
-            let m = v.getMagnitude();
+            let m = v.getBoundedMagnitude();
            if(m > MAX_SIZE){
                MAX_SIZE = m;
            }
         });
         [...this.props.calculations].forEach(([id,c]) => {
-            let m = c.calculate(this.props.vectors).getMagnitude();
+            let m = c.calculate(this.props.vectors).getBoundedMagnitude();
             if(m > MAX_SIZE){
                 MAX_SIZE = m;
             }

@@ -78,6 +78,10 @@ export class Vector {
     getMagnitude() {
         return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
     }
+    //Returns the magnitude including origin.
+    getBoundedMagnitude(){
+        return Math.sqrt((parseFloat(this.x) + parseFloat(this.fromx)) ** 2 + (parseFloat(this.y) + parseFloat(this.fromy)) ** 2 + (parseFloat(this.z) + parseFloat(this.fromz)) **2);
+    }
 
     getEulers() {
         return {

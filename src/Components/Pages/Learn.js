@@ -78,7 +78,7 @@ export default class Learn extends Component {
 
                     Even though both quantities have the same magnitude, or size, they point in different directions.
                     Imagine an airplane whose velocity
-                    is represented by either of these vectors...its obvious that direction matters.
+                    is represented by either of these vectors...it's obvious that direction matters.
                 </p>
 
                 <div className={'divider minor'}/>
@@ -146,6 +146,7 @@ export default class Learn extends Component {
                         <li>Subtraction</li>
                         <li>Scalar Multiplication</li>
                         <li>Magnitude</li>
+                        <li>Unit Vectors</li>
                     </ol>
                 </p>
 
@@ -195,6 +196,29 @@ export default class Learn extends Component {
 
                 </p>
 
+                <h2 id={'unit'}>
+                    Unit Vectors
+                </h2>
+                <p>
+                    We just covered scalar multiplication and magnitude, these concepts can be combined to create unit vectors.
+                    All vectors have a length, otherwise known as their magnitude, and a direction.
+                    Every vector also has an associated unit vector: <b>a vector with the same direction, but a magnitude of 1</b>
+
+                    <br/>
+                    <br/>
+                    That is, a unit vector is a scalar multiple of a vector, with a magnitude of 0. Given a vector v, we can find its unit vector as follows:
+                    <br/>
+                    <span className={'highlight'}>v / ||v||</span>.
+                    <br/>
+                    By multiplying a vector by 1 over its magnitude, we effectively cancel out its magnitude.
+
+                    <h3>
+                        Why does this matter?
+                    </h3>
+                    Unit vectors are useful as they allow you to use a vector's direction while ignoring the effects of its magnitude.
+                    This is particularly important in projection, as you'll see later.
+                </p>
+
                 <div className={'divider minor'}/>
 
                 <h1>Vector Multiplication</h1>
@@ -219,6 +243,12 @@ export default class Learn extends Component {
                     dot product can be found as ||a|| × ||b|| × cos(θ).
                     That is, the product of the magnitudes and the cosine of the angle between them.
                 </p>
+
+                <br/>
+                <br/>
+                <span className={'note'}>
+                        Note that V • W is NOT the same as W • V.
+                    </span>
 
                 <h2>Cross Product</h2>
                 <p>
@@ -262,16 +292,13 @@ export default class Learn extends Component {
                     <br/>
                     <br/>
 
-                    To calculate the projection of vector V onto vector W, we use the following:
+                    To calculate the magnitude of the projection of vector V onto vector W, we use the following:
                     <br/>
                     <span className={'highlight'}>(V • W) / ||W||.</span>
 
                     <br/>
-                    <br/>
-                    <span className={'note'}>
-                        Note that V • W is NOT the same as W • V.
-                    </span>
-
+                    To find the vector form of this projection, we multiply the above magnitude by the <a href={'#unit'} className={'minor'}> unit vector </a> of W.
+                    This <i>points</i> the projection in the same direction as W.
                 </p>
 
                 <div className={'divider minor'}/>
