@@ -52,9 +52,9 @@ export class Operations {
             x: parseFloat(v1.x) + parseFloat(v2.x),
             y: parseFloat(v1.y) + parseFloat(v2.y),
             z: parseFloat(v1.z) + parseFloat(v2.z),
-            fromx: parseFloat(v1.fromx + v1.x),
-            fromy: parseFloat(v1.fromy + v1.y),
-            fromz: parseFloat(v1.fromz + v1.z)
+            fromx: parseFloat(v1.fromx) + parseFloat(v1.x),
+            fromy: parseFloat(v1.fromy) + parseFloat(v1.y),
+            fromz: parseFloat(v1.fromz) + parseFloat(v1.z)
         }
         return result;
     }
@@ -65,9 +65,9 @@ export class Operations {
             x: parseFloat(v1.x) - parseFloat(v2.x),
             y: parseFloat(v1.y) - parseFloat(v2.y),
             z: parseFloat(v1.z) - parseFloat(v2.z),
-            fromx: parseFloat(v1.fromx + v1.x),
-            fromy: parseFloat(v1.fromy + v1.y),
-            fromz: parseFloat(v1.fromz + v1.z)
+            fromx: parseFloat(v1.fromx) + parseFloat(v1.x),
+            fromy: parseFloat(v1.fromy) + parseFloat(v1.y),
+            fromz: parseFloat(v1.fromz) + parseFloat(v1.z)
         }
         return result;
     }
