@@ -16,9 +16,12 @@ export default class Learn extends Component {
                 <div className={'controls'}>
                     <Link to={'/'}>Calculator</Link>
                 </div>
+
                 <div className={'logo'}>
+                    <img src={'/images/v.png'}/>
                     Vectorly
                 </div>
+
                 <div className={'divider'}/>
                 <p>
                     <i>This page is interactive. Feel free to play around!</i>
@@ -37,7 +40,8 @@ export default class Learn extends Component {
 
                 <p>
                     <b>Vectors</b> however, have both a magnitude and a direction. On a graph, they are usually
-                    represented by an arrow. In writing, they are represented by a letter with a horizontal arrow above it.
+                    represented by an arrow. In writing, they are represented by a letter with a horizontal arrow above
+                    it.
                     In this page, the arrow will be excluded, but it will be made clear when a quantity is a vector.
                 </p>
 
@@ -200,13 +204,16 @@ export default class Learn extends Component {
                     Unit Vectors
                 </h2>
                 <p>
-                    We just covered scalar multiplication and magnitude, these concepts can be combined to create unit vectors.
+                    We just covered scalar multiplication and magnitude, these concepts can be combined to create unit
+                    vectors.
                     All vectors have a length, otherwise known as their magnitude, and a direction.
-                    Every vector also has an associated unit vector: <b>a vector with the same direction, but a magnitude of 1</b>
+                    Every vector also has an associated unit vector: <b>a vector with the same direction, but a
+                    magnitude of 1</b>
 
                     <br/>
                     <br/>
-                    That is, a unit vector is a scalar multiple of a vector, with a magnitude of 0. Given a vector v, we can find its unit vector as follows:
+                    That is, a unit vector is a scalar multiple of a vector, with a magnitude of 0. Given a vector v, we
+                    can find its unit vector as follows:
                     <br/>
                     <span className={'highlight'}>v / ||v||</span>.
                     <br/>
@@ -215,8 +222,26 @@ export default class Learn extends Component {
                     <h3>
                         Why does this matter?
                     </h3>
-                    Unit vectors are useful as they allow you to use a vector's direction while ignoring the effects of its magnitude.
+                    Unit vectors are useful as they allow you to use a vector's direction while ignoring the effects of
+                    its magnitude.
                     This is particularly important in projection, as you'll see later.
+
+                    <h3>
+                        i, j, and k
+                    </h3>
+                    The three most common unit vectors are so important, they are given permanent names: i, j, and k.
+                    These unit vectors lie on the x, y, and z axes respectively.
+                    By using these unit vectors, we can deal with vectors algebraically more easily. For example:
+                    <br/>
+                    <span className={'highlight'}>(1, 5, 4)</span>
+                    <br/>
+                    can be represented as:
+                    <br/>
+                    <span className={'highlight'}>1i + 5j + 4k</span>
+                    <br/>
+                    <br/>
+                    <span
+                        className={'note'}>When written, unit vectors generally have a carat (^) on top of them.</span>
                 </p>
 
                 <div className={'divider minor'}/>
@@ -297,7 +322,9 @@ export default class Learn extends Component {
                     <span className={'highlight'}>(V • W) / ||W||.</span>
 
                     <br/>
-                    To find the vector form of this projection, we multiply the above magnitude by the <a href={'#unit'} className={'minor'}> unit vector </a> of W.
+                    To find the vector form of this projection, we multiply the above magnitude by the <a href={'#unit'}
+                                                                                                          className={'minor'}> unit
+                    vector </a> of W.
                     This <i>points</i> the projection in the same direction as W.
                 </p>
 
@@ -316,7 +343,9 @@ export default class Learn extends Component {
                 <div className={'divider'}/>
                 <p>
                     <i>These can be hard to do by hand! That's why Vectorly does them for you. </i>
-                    By now you have a basic understanding of vectors. Head to the <a href={'/'} className={'minor'}>calculator</a> to perform more complex operations.
+                    By now you have a basic understanding of vectors. Head to the <a href={'/'}
+                                                                                     className={'minor'}>calculator</a> to
+                    perform more complex operations.
                 </p>
 
                 <br/>

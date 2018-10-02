@@ -3,7 +3,7 @@ import ReactTHREE from 'react-three';
 import * as THREE from 'three';
 import './Graph.css';
 import {COLOURS} from "../Colours";
-import {Operations} from "../Math/Operations";
+import Operations from "../Math/Operations";
 
 var OrbitControls = require('three-orbit-controls')(THREE)
 var MeshLine = require('three.meshline')
@@ -138,15 +138,18 @@ class Graph extends Component {
 
         var midpoint = new THREE.Vector3(total.x/2, total.y/2, total.z/2)
 
-        var vector = [
-            <ReactTHREE.Mesh
+        var toRender = []
+
+        if(vector.getMagnitude() > 0){
+            toRender.push(<ReactTHREE.Mesh
                 position={midpoint}
                 geometry={boxGeometry}
                 material={material}
-            />
-        ];
-        if (showBounds) {
-            vector.push(
+            />);
+        }
+
+        if (showBounds && vector.getMagnitude() > 0) {
+            toRender.push(
                 <ReactTHREE.Mesh
                     position={midpoint}
                     geometry={new THREE.BoxGeometry(v.x, v.y, v.z)}
@@ -159,14 +162,14 @@ class Graph extends Component {
                 />
             );
         }
-        vector.push(
+        toRender.push(
             <ReactTHREE.Mesh
                 position={new THREE.Vector3(total.x - origin.x/2, total.y - origin.y/2, total.z - origin.z/2)}
                 geometry={sphereGeometry}
                 material={material}
             />
         )
-        return (vector);
+        return (toRender);
 
     }
     cameraChanged = () => {

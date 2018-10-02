@@ -5,7 +5,7 @@ import {COLOURS} from "../../Colours";
 import Graph from "../../Graph/Graph";
 import Sidebar from "../Sidebar/Sidebar";
 import {Calculation} from "../../Math/Calculation";
-import {Operations} from "../../Math/Operations";
+import Operations from "../../Math/Operations";
 
 export default class Visualizer extends Component{
     constructor() {

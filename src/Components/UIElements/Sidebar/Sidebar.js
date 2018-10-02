@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import './Sidebar.css'
-import {Operations} from "../../Math/Operations";
+import Operations from "../../Math/Operations";
 import {COLOURS} from "../../Colours";
 import {Vector} from "../../Math/Vector";
 
 class Sidebar extends Component {
     state = {
-        closed: false,
+        closed: true,
         display: 'VECTORS'
     }
 
@@ -51,6 +51,7 @@ class Sidebar extends Component {
                                 return (
                                     <Item
                                         item={vector}
+                                        addVector = {this.props.addVector}
                                         deleteItem={this.props.deleteItem}
                                         updateItem={this.props.updateItem}
                                         toggleFocused={this.props.toggleFocused}
@@ -59,34 +60,6 @@ class Sidebar extends Component {
                                     />
                                 )
                             })
-                        }
-
-                        {
-                            this.props.vectors.size > 0 &&
-                            <div>
-                                <button className={'hoverable'}
-                                        onClick={() => {
-                                            var lv = [...this.props.vectors][this.props.vectors.size - 1][1];
-                                            this.props.addVector(
-                                                new Vector(10, 10, 10, true, false, 'Vector', COLOURS.green, parseFloat(lv.fromx) + parseFloat(lv.x), parseFloat(lv.fromy) + parseFloat(lv.y), parseFloat(lv.fromz) + parseFloat(lv.z))
-                                            )
-                                        }
-                                        }
-                                >
-                                    Chain
-                                </button>
-                                <button className={'hoverable'}
-                                        onClick={() => {
-                                            var lv = [...this.props.vectors][this.props.vectors.size - 1][1];
-                                            this.props.addVector(
-                                                new Vector(parseFloat(lv.fromx) + parseFloat(lv.x), parseFloat(lv.fromy) + parseFloat(lv.y), parseFloat(lv.fromz) + parseFloat(lv.z), true, false, 'Vector', COLOURS.green)
-                                            )
-                                        }
-                                        }
-                                >
-                                    Resolve
-                                </button>
-                            </div>
                         }
                     </div>
                 }
@@ -163,6 +136,46 @@ class Item extends Component {
 
                     />
                     <span>
+                        {
+                            //resolve
+                        }
+                        <span
+                            className={'material-icons hoverable'}
+                            onClick={() => {
+                                let lv = this.props.item;
+                                let c = new Vector(parseFloat(lv.fromx) + parseFloat(lv.x), parseFloat(lv.fromy) + parseFloat(lv.y), parseFloat(lv.fromz) + parseFloat(lv.z), true, false, 'Vector', COLOURS.green)
+                                this.props.addVector(c)
+                            }}
+                            style={{
+                                color: 'var(--gray)'
+                            }}
+                        >call_received</span>
+                        {
+                            //Chain
+                        }
+                        <span
+                            className={'material-icons hoverable'}
+                            onClick={() => {
+                                let lv = this.props.item;
+                                let c = new Vector(10, 10, 10, true, false, 'Vector', COLOURS.green, parseFloat(lv.fromx) + parseFloat(lv.x), parseFloat(lv.fromy) + parseFloat(lv.y), parseFloat(lv.fromz) + parseFloat(lv.z))
+                                this.props.addVector(c)
+                            }}
+                            style={{
+                                color: 'var(--gray)'
+                            }}
+                        >call_made</span>
+                        {
+                            //Copy
+                        }
+                        <span
+                            className={'material-icons hoverable'}
+                            onClick={() => {
+                                this.props.addVector(this.props.item.copy())
+                            }}
+                            style={{
+                                color: 'var(--gray)'
+                            }}
+                        >call_split</span>
                         <span
                             className={'material-icons hoverable'}
                             onClick={() => {
@@ -294,18 +307,34 @@ class OperationItem extends Component {
                         <option value={3}>Dot</option>
                         <option value={4}>Project</option>
                         <option value={5}>Perpendicular Project</option>
+                        <option value={6}>Scalar Multiply </option>
+                        <option value={7}>Unit Vector</option>
+                        <option value={8}>To Head</option>
+                        <option value={9}>To Tail</option>
                     </select>
-                    <select className="property calculation"
-                            placeholder={'V2'}
-                            value={this.props.item.v2}
-                            onChange={(e) => {
-                                this.props.updateCalculationV2(this.props.item, e.target.value)
-                            }}
-                    >
-                        {
-                            this.getVectorOptions()
-                        }
-                    </select>
+
+                    {Operations.secondary(this.props.item.operation) == 'v2' &&
+                        <select className="property calculation"
+                                placeholder={'V2'}
+                                value={this.props.item.v2}
+                                onChange={(e) => {
+                                    this.props.updateCalculationV2(this.props.item, e.target.value)
+                                }}
+                        >
+                            {
+                                this.getVectorOptions()
+                            }
+                        </select>
+                    }
+
+                    {
+                        Operations.secondary(this.props.item.operation) == 'scalar' &&
+                        <input className="property component"
+                               placeholder={'Scalar'} value={this.props.item.scalar}
+                               onChange={(e) => {
+                                   this.props.updateCalculation(this.props.item, this.props.item.updateScalar(e.target.value))
+                               }}/>
+                    }
                 </div>
                 {
                     vector.isVector &&

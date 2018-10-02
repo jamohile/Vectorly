@@ -76,16 +76,18 @@
 }
 #sidebar .item .controls input{
     width: 50%;
-    position: relative;
-    left: 6px;
+    margin: auto;
 }
 #sidebar .item .controls input.focus{
     color:var(--primary);
 }
 
-#sidebar .item .controls span{
-    font-size: small;
-    float: right;
+#sidebar .item .controls > span{
+    position: absolute;
+    right: 0;
+}
+#sidebar .item .controls .material-icons{
+    font-size: 16px;
 }
 
 #sidebar .item .properties{

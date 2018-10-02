@@ -13,7 +13,7 @@ export default class Multiplex extends Component {
     constructor() {
         super();
         this.state = {
-            units: []
+            units: new Map()
         }
     }
 
@@ -30,47 +30,50 @@ export default class Multiplex extends Component {
 
                 <div className={'unitContainer'}>
                     {
-                        this.state.units
+                        [...this.state.units].map((val) => val[1])
                     }
                 </div>
 
                 <div>
                     <button className={'hoverable'}
-                            onClick={() => this.addUnit(1)}
-                    >Add Full Unit
+                            onClick={() => this.addUnit(1, 1)}
+                    >Add Unit
                     </button>
                     {
                         window.innerWidth > 600 &&
-                        <button className={'hoverable'}
-                                onClick={() => this.addUnit(2)}
-                        >Add Half Unit
-                        </button>
+                        [
+                            <button className={'hoverable'}
+                                    onClick={() => this.addUnit(2, 1)}
+                            >Add 1/2 Unit
+                            </button>
+                        ]
                     }
                 </div>
             </div>
         )
     }
 
-    addUnit = (size) => {
+    addUnit = (sizeX, sizeY) => {
+        const modifiedUnits = this.state.units;
+        modifiedUnits.set(this.state.units.size,
+            VisualizerUnit(
+                this.state.units.size,
+                (index) => {
+                    const modified = this.state.units;
+                    modified.delete(index)
+                    this.setState({units: modified})
+                },
+                sizeX,
+                sizeY
+            ))
         this.setState(
             {
-                units: [
-                    ...this.state.units,
-                    VisualizerUnit(
-                        this.state.units.length,
-                        (index) => {
-                            const modified = this.state.units;
-                            modified.splice(index, 1)
-                            this.setState({units: modified})
-                        },
-                        size
-                    )
-                ]
+                units: modifiedUnits
             })
     }
 }
 
-const VisualizerUnit = (index, deleteHandler, size) => {
+const VisualizerUnit = (index, deleteHandler, sizeX, sizeY) => {
     const v1 = new Vector(10, 0, 0, true, false, 'X', COLOURS.blue);
     const v2 = new Vector(0, 10, 0, true, false, 'Y', COLOURS.red);
     const v3 = new Vector(0, 0, 10, true, false, 'Z', COLOURS.green);
@@ -83,8 +86,8 @@ const VisualizerUnit = (index, deleteHandler, size) => {
             <div className={'card'}>
                 <Visualizer
                     vectors={[v1, v2, v3]}
-                    height={3 * window.innerHeight / 4}
-                    width={(window.innerWidth - 32)/size}
+                    height={(3 * window.innerHeight / 4) / sizeY}
+                    width={(window.innerWidth) / sizeX - 32}
                     advanced
                     editable
                 />

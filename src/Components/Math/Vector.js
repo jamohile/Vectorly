@@ -22,7 +22,6 @@ export class Vector {
         this.y = y;
         this.z = z;
 
-        console.dir(fromx);
         this.fromx = fromx ? fromx : 0
         this.fromy = fromy || 0
         this.fromz = fromz || 0
@@ -35,6 +34,10 @@ export class Vector {
             Vector.LAST_ID += 1;
         }
 
+    }
+
+    copy(){
+        return new Vector(this.x, this.y, this.z, this.isVector, false, 'Copy of ' +  this.name, this.colour, this.fromx, this.fromy, this.fromz)
     }
 
     setX(x) {

@@ -1,5 +1,6 @@
 import {Vector} from "./Vector";
 import {COLOURS} from "../Colours";
+import Operations from "./Operations";
 
 export class Calculation {
     static LAST_ID = 0;
@@ -10,15 +11,17 @@ export class Calculation {
     operation;
     v1;
     v2;
+    scalar;
     name;
 
-    constructor(v1ID, v2ID, operation, name) {
+    constructor(v1ID, v2ID, operation, name, scalar) {
         this.id = Calculation.LAST_ID + 1;
 
         this.operation = operation;
         this.v1 = v1ID;
         this.v2 = v2ID;
         this.name = name;
+        this.scalar = scalar;
 
         Calculation.LAST_ID += 1;
 
@@ -26,9 +29,18 @@ export class Calculation {
     }
 
     calculate(vectors) {
-        let result = this.operation(vectors.get(parseFloat(this.v1)), vectors.get(parseFloat(this.v2)));
-        console.dir('calc');
-        console.dir(this);
+        let result;
+        switch (Operations.secondary(this.operation)){
+            case 'v2':
+                result = this.operation(vectors.get(parseFloat(this.v1)), vectors.get(parseFloat(this.v2)));
+                break;
+            case 'scalar':
+                result =this.operation(vectors.get(parseFloat(this.v1)), this.scalar);
+                break;
+            case undefined:
+                result =this.operation(vectors.get(parseFloat(this.v1)));
+        }
+
         console.dir(result);
         var vector = new Vector(result.x, result.y, result.z, result.isVector, true, this.name, COLOURS.orange, result.fromx, result.fromy, result.fromz);
         console.dir(vector);
@@ -42,6 +54,10 @@ export class Calculation {
 
     updateOperation(operation) {
         this.operation = operation;
+
+        if(Operations.secondary(operation) != 'v2'){
+            Calculation.removeVector(this.v2);
+        }
         return this
     }
 
@@ -53,10 +69,15 @@ export class Calculation {
     }
 
     updateV2(v2) {
-        Calculation.removeVector(this.v1);
+        Calculation.removeVector(this.v2);
         this.v2 = parseInt(v2);
         Calculation.USED_VECTORS.push(this.v2);
         return this
+    }
+
+    updateScalar(scalar){
+        this.scalar = scalar;
+        return this;
     }
 
     static usesVector(vID) {
