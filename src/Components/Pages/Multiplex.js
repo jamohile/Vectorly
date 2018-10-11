@@ -20,7 +20,7 @@ export default class Multiplex extends Component {
     render() {
         return (
             <div className={'page'} id={'main'}>
-                <Link className={'hoverable'} to={'/'}>Back</Link>
+                <Link className={'hoverable'} to={'/app'}>Back</Link>
 
                 <div className={'logo'}>
                     Vectorly Multiplexer

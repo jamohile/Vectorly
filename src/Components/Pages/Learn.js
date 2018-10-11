@@ -14,7 +14,7 @@ export default class Learn extends Component {
         return (
             <div className={'page'}>
                 <div className={'controls'}>
-                    <Link to={'/'}>Calculator</Link>
+                    <Link to={'/app'}>Calculator</Link>
                 </div>
 
                 <div className={'logo'}>

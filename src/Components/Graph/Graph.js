@@ -28,9 +28,10 @@ class Graph extends Component {
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.configure()
     }
+
     componentDidMount() {
         const controls = new OrbitControls(this.camera, this.refs['renderer']._THREErenderer.domElement)
         controls.addEventListener('change', this.cameraChanged);
@@ -57,15 +58,15 @@ class Graph extends Component {
             this.cameraprops.position = this.camera.position;
         }
         let MAX_SIZE = 100;
-        [...this.props.vectors].forEach(([id,v]) => {
+        [...this.props.vectors].forEach(([id, v]) => {
             let m = v.getBoundedMagnitude();
-           if(m > MAX_SIZE){
-               MAX_SIZE = m;
-           }
+            if (m > MAX_SIZE) {
+                MAX_SIZE = m;
+            }
         });
-        [...this.props.calculations].forEach(([id,c]) => {
+        [...this.props.calculations].forEach(([id, c]) => {
             let m = c.calculate(this.props.vectors).getBoundedMagnitude();
-            if(m > MAX_SIZE){
+            if (m > MAX_SIZE) {
                 MAX_SIZE = m;
             }
         });
@@ -83,6 +84,8 @@ class Graph extends Component {
                     <ReactTHREE.PerspectiveCamera name="maincamera" ref={(e) => {
                         this.camera = e
                     }} {...this.cameraprops} />
+
+
                     {
                         /*
                         Render coordinate planes.
@@ -97,17 +100,17 @@ class Graph extends Component {
                          */
 
                         [...this.props.vectors].map(([id, vector]) => {
-                            return this.renderVector(vector, true, true, this.props.focused.has('v_'+ vector.id))
+                            return this.renderVector(vector, true, true, this.props.focused.has('v_' + vector.id))
                         })}
                     {
                         [...this.props.calculations]
                             .map(([id, operation]) => {
                                 return [id, operation.calculate(this.props.vectors)]
                             })
-                            .filter(([id,result]) => {
-                                return [id,result.isVector]
+                            .filter(([id, result]) => {
+                                return [id, result.isVector]
                             })
-                            .map(([id,result]) => this.renderVector(result, false, true, this.props.focused.has('c_' + id)))
+                            .map(([id, result]) => this.renderVector(result, false, true, this.props.focused.has('c_' + id)))
                     }
                 </ReactTHREE.Scene>
             </ReactTHREE.Renderer>
@@ -119,7 +122,7 @@ class Graph extends Component {
         var scale = focus ? .4 : .2
 
         var v = new THREE.Vector3(vector.x, vector.y, vector.z)
-        var origin = new THREE.Vector3(2 * vector.fromx, 2* vector.fromy, 2* vector.fromz);
+        var origin = new THREE.Vector3(2 * vector.fromx, 2 * vector.fromy, 2 * vector.fromz);
 
         var total = Operations.add(v, origin);
         total = new THREE.Vector3(total.x, total.y, total.z);
@@ -136,11 +139,11 @@ class Graph extends Component {
 
         boxGeometry.lookAt(v);
 
-        var midpoint = new THREE.Vector3(total.x/2, total.y/2, total.z/2)
+        var midpoint = new THREE.Vector3(total.x / 2, total.y / 2, total.z / 2)
 
         var toRender = []
 
-        if(vector.getMagnitude() > 0){
+        if (vector.getMagnitude() > 0) {
             toRender.push(<ReactTHREE.Mesh
                 position={midpoint}
                 geometry={boxGeometry}
@@ -164,7 +167,7 @@ class Graph extends Component {
         }
         toRender.push(
             <ReactTHREE.Mesh
-                position={new THREE.Vector3(total.x - origin.x/2, total.y - origin.y/2, total.z - origin.z/2)}
+                position={new THREE.Vector3(total.x - origin.x / 2, total.y - origin.y / 2, total.z - origin.z / 2)}
                 geometry={sphereGeometry}
                 material={material}
             />
@@ -230,24 +233,24 @@ class Graph extends Component {
                     />
                 ],
                 //Along Z axis
-                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                this.generateMinorGridLines(size, size / 5, (bound, val) => {
                     return new THREE.Vector3(bound, 0, val)
                 }),
-                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                this.generateMinorGridLines(size, size / 5, (bound, val) => {
                     return new THREE.Vector3(0, bound, val)
                 }),
                 //Along X axis
-                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                this.generateMinorGridLines(size, size / 5, (bound, val) => {
                     return new THREE.Vector3(val, 0, bound)
                 }),
-                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                this.generateMinorGridLines(size, size / 5, (bound, val) => {
                     return new THREE.Vector3(val, bound, 0)
                 }),
                 //Along Y axis
-                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                this.generateMinorGridLines(size, size / 5, (bound, val) => {
                     return new THREE.Vector3(0, val, bound)
                 }),
-                this.generateMinorGridLines(size, size/5, (bound, val) => {
+                this.generateMinorGridLines(size, size / 5, (bound, val) => {
                     return new THREE.Vector3(bound, val, 0)
                 })
             ]

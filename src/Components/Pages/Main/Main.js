@@ -7,34 +7,56 @@ import {Link} from 'react-router-dom'
 
 import './Main.css'
 
+const initalVectors = [
+    new Vector(10, 0, 0, true, false, 'X', COLOURS.blue),
+    new Vector(0, 10, 0, true, false, 'Y', COLOURS.red),
+    new Vector(0, 0, 10, true, false, 'Z', COLOURS.green)
+]
 export default class Main extends Component {
-    constructor(){
+
+    constructor() {
         super();
         this.state = {
-            advanced: false
+            advanced: false,
+            controlsOpen: false
         }
     }
 
     render() {
-        const v1 = new Vector(10, 0, 0, true, false, 'X', COLOURS.blue);
-        const v2 = new Vector(0, 10, 0, true, false, 'Y', COLOURS.red);
-        const v3 = new Vector(0, 0, 10, true, false, 'Z', COLOURS.green);
 
         return (
             <div className={'page'} id={'main'}>
                 <div className={'controls'}>
-                    <Link className={'hoverable'} to={'/learn'}>Learn</Link>
-                    <br/>
-                    <Link className={'hoverable'} to={'/multiplexer'}>Multiplexer</Link>
-                    <br/>
-                    <button className={'hoverable accent'}
-                        onClick={() => this.setState({advanced: !this.state.advanced})}
-                    >
-                        {this.state.advanced ? 'Basic' : 'Advanced'}
-                    </button>
+                    {
+                        !this.state.controlsOpen &&
+                        <span className={'material-icons hoverable'}
+                              onClick={() => this.setState({controlsOpen: true})}>
+                                menu
+                        </span>
+                    }
+                    {
+                        this.state.controlsOpen &&
+                        <div className={'card padded opaque'}>
+                            <span className={'material-icons hoverable'}
+                                  onClick={() => this.setState({controlsOpen: false})}>
+                                close
+                            </span>
+                            <br/>
+                            <Link className={'hoverable'} to={'/app/learn'}>Learn</Link>
+                            <br/>
+                            <Link className={'hoverable'} to={'/app/multiplexer'}>Multiplexer</Link>
+                            <div className={'divider minor'}/>
+
+                            <button className={'hoverable accent'}
+                                    onClick={() => this.setState({advanced: !this.state.advanced})}
+                            >
+                                {this.state.advanced ? 'Basic' : 'Advanced'}
+                            </button>
+                        </div>
+                    }
                 </div>
                 <Visualizer
-                    vectors={[v1, v2, v3]}
+                    vectors={initalVectors}
                     height={window.innerHeight}
                     width={window.innerWidth}
                     advanced={this.state.advanced}
