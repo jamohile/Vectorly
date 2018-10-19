@@ -25,8 +25,13 @@ class App extends Component {
             <BrowserRouter>
                 <div className={'App'}>
                     <Route exact path={'/'} component={Main}/>
+                    <Route exact path={'/app'} component={Main}/>
+            
                     <Route path={'/learn'} component={Learn}/>
+                    <Route path={'/app/learn'} component={Learn}/>
+            
                     <Route path={'/multiplexer'} component={Multiplex}/>
+                    <Route path={'/app/multiplexer'} component={Multiplex}/>
                 </div>
             </BrowserRouter>
         );
